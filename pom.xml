@@ -8,11 +8,21 @@
 	<packaging>war</packaging>
 	<name>crud-pessoa</name>
 	<description>Crud de Cadastro de Pessoas</description>
-	
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	
+	<repositories>
+		<!-- Prime Faces -->
+		<repository>
+			<id>prime-repo</id>
+			<name>Prime Repo</name>
+			<url>http://repository.primefaces.org</url>
+			<layout>default</layout>
+		</repository>
+  </repositories>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.jboss.weld.servlet</groupId>
@@ -20,7 +30,7 @@
 			<version>2.4.0.Final</version>
 			<scope>compile</scope>
 		</dependency>
-		
+
 		<!-- Implementação JSF Mojarra -->
 		<dependency>
 			<groupId>org.glassfish</groupId>
@@ -28,44 +38,51 @@
 			<version>2.2.14</version>
 			<scope>compile</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.primefaces</groupId>
 			<artifactId>primefaces</artifactId>
 			<version>6.0</version>
 			<scope>compile</scope>
 		</dependency>
-		
+
+		<!-- https://mvnrepository.com/artifact/org.primefaces.themes/all-themes -->
+		<dependency>
+			<groupId>org.primefaces.themes</groupId>
+			<artifactId>all-themes</artifactId>
+			<version>1.0.10</version>
+		</dependency>
+
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
 			<version>3.1.0</version>
 			<scope>provided</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
 			<version>5.3.2.Final</version>
 			<scope>compile</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
 			<version>5.2.4.Final</version>
-			<scope>compile</scope>	
+			<scope>compile</scope>
 		</dependency>
-		
+
 		<dependency>
-		    <groupId>org.postgresql</groupId>
-		    <artifactId>postgresql</artifactId>
-		    <version>42.7.3</version>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.7.3</version>
 		</dependency>
-		
-		
+
+
 	</dependencies>
-	
+
 	<build>
 		<plugins>
 			<plugin>

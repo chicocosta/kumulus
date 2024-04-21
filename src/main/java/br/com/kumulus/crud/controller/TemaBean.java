@@ -1,11 +1,13 @@
 package br.com.kumulus.crud.controller;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
 
 @Named
+@ApplicationScoped
 public class TemaBean {
 
-	private String tema = "sunny";
+	private String tema = "pepper-grinder";
 
 	public String getTema() {
 		return tema;
@@ -23,7 +25,7 @@ public class TemaBean {
 				"hot-sneaks", "humanity", "le-frog", "midnight", "mint-choc",
 				"overcast", "pepper-grinder", "redmond", "rocket", "sam",
 				"smoothness", "south-street", "start", "sunny", "swanky-purse",
-				"trontastic", "ui-darkness", "ui-lightness", "vader" };
+				"trontastic", "ui-darkness", "ui-lightness", "vader"};
 	}
 
 }

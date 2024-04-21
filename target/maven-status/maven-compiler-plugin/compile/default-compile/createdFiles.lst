@@ -1,9 +1,10 @@
-br\com\kumulus\crud\config\Transacional.class
 br\com\kumulus\crud\model\Endereco.class
 br\com\kumulus\crud\model\Pessoa.class
-br\com\kumulus\crud\config\EntityManagerProducer.class
 br\com\kumulus\crud\config\TransacionalInterceptor.class
 br\com\kumulus\crud\dao\EnderecoDAO.class
+br\com\kumulus\crud\config\Transacional.class
+br\com\kumulus\crud\config\EntityManagerProducer.class
+br\com\kumulus\crud\controller\TemaBean.class
 br\com\kumulus\crud\dao\PessoaDAO.class
 br\com\kumulus\crud\service\CadastroPessoaService.class
 br\com\kumulus\crud\controller\PessoaBean.class

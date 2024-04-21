@@ -6,52 +6,210 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
-	<ui:composition template="_template.xhtml">
+<ui:composition template="_template.xhtml">
 	<!-- 
 		<f:metadata>
 			<f:viewParam name="livroId" value="#{livroBean.livroId}"/>
 			<f:viewAction action="#{livroBean.carregarLivroPelaId}" if="#{param.livroId != null}" />
 		</f:metadata>
 	 -->
-		<ui:define name="titulo">
-				<p:outputPanel>Cadastro de Pessoa</p:outputPanel>
-		</ui:define>
+	<ui:define name="titulo">
+		<p:outputPanel>Cadastro de Pessoa</p:outputPanel>
+	</ui:define>
 
-		<ui:define name="conteudo">
+	<ui:define name="conteudo">
+
+		<h:form id="formTabelaPessoas">
+<!-- 			<p:messages id="messages" /> -->
+			<p:toolbar>
+				<f:facet name="left">
+					<p:commandButton value="Nova" icon="fa fa-plus" 
+						actionListener="#{pessoaBean.prepararNovaPessoa}" 
+						update=":dialogs:PessoaDialog"
+                    	oncomplete="PF('PessoaDialog').show()">
+                    	<p:resetInput target=":dialogs:PessoaDialog" />
+                    </p:commandButton>
+				</f:facet>
+			</p:toolbar>
+			<p:dataTable value="#{pessoaBean.pessoas}" var="pessoa"
+				emptyMessage="Nenhuma pessoa localizada"
+				paginationPosition="botton" 
+				id="tabelaPessoas" paginator="true" rows="10">
+
+				<f:facet name="header">Pessoas</f:facet>
+				<p:column headerText="Nome" sortBy="#{pessoa.nome}"
+					filterBy="#{pessoa.nome}" filterMatchMode="startsWith" sortOrder="asc">
+					<h:outputText value="#{pessoa.nome}" />
+				</p:column>
+
+				<p:column headerText="Sexo" sortBy="#{pessoa.sexo}"
+					filterBy="#{pessoa.sexo}" filterMatchMode="startsWith">
+					<h:outputText value="#{pessoa.sexo}" />
+				</p:column>
+
+				<p:column headerText="Idade" sortBy="#{pessoa.idade}">
+					<h:outputText value="#{pessoa.idade}">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</h:outputText>
+
+				</p:column>
+
+				<p:column>
+					<p:commandButton value="Alterar" icon="fa fa-edit"
+						update=":dialogs:PessoaDialog" 
+                    	oncomplete="PF('PessoaDialog').show()">
+                    	<f:setPropertyActionListener value="#{pessoa}" target="#{pessoaBean.pessoa}" />
+                    	<p:resetInput target=":dialogs:PessoaDialog" />
+                    </p:commandButton>
+				</p:column>
+
+				<p:column>
+					<p:commandButton value="Excluir" icon="fa fa-trash"
+						actionListener="#{pessoaBean.excluirPessoa(pessoa)}" 
+						update="formTabelaPessoas"/>
+				</p:column>
+
+			</p:dataTable>
 			
-			<h:form id="formTabelaPessoas">
-				<p:messages id="messages" />
-				<p:dataTable value="#{pessoaBean.pessoas}" var="pessoa" id="tabelaPessoas" 
-					paginator="true" rows="5">
-					
-					<f:facet name="header">Pessoas</f:facet>
-					<p:column headerText="Nome" sortBy="#{pessoa.nome}" 
-						filterBy="#{pessoa.nome}" filterMatchMode="startsWith">
-						<h:outputText value="#{pessoa.nome}" />
-					</p:column>
-					
-					<p:column headerText="Sexo" sortBy="#{pessoa.sexo}" 
-						filterBy="#{pessoa.sexo}" filterMatchMode="startsWith">
-						<h:outputText value="#{pessoa.sexo}" />
-					</p:column>
-					
-					<p:column headerText="Idade" sortBy="#{pessoa.idade}"> 
-						<h:outputText value="#{pessoa.idade}" />
-					</p:column>
-					
-					<p:column headerText="Alterar">
-						<h:commandLink value="altera" action="#{pessoaBean.carregarPessoa(pessoa)}"/>
-					</p:column>					
-					
-					<p:column headerText="Remover">
-						<h:commandLink value="remove" action="#{pessoaBean.removerPessoa(pessoa)}"/>
-					</p:column>	
-					
-				</p:dataTable>
-			</h:form>	
-					
 			
-		</ui:define>
-	</ui:composition>
+		</h:form>
+
+		<h:form id="dialogs">
+			<p:dialog header="Pessoa" showEffect="fade" modal="true" id="PessoaDialog"
+				widgetVar="PessoaDialog" responsive="true">
+				<p:outputPanel id="pessoa-content" class="ui-fluid">
+					<p:outputPanel>
+						<div class="field">
+							<p:outputLabel for="nome">Name</p:outputLabel>
+							<p:inputText id="nome" value="#{pessoaBean.pessoa.nome}"
+								required="true" requiredMessage="Nome obrigatório"
+								validatorMessage="O nome deve conter de 1 a 150 caracteres">
+								<f:validateLength maximum="150" minimum="1" />
+								<f:ajax event="blur" render="messages" />
+							</p:inputText>
+						</div>
+						<div class="field">
+							<p:outputLabel value="Data do Nascimento:" for="idade" />
+							<p:calendar id="idade" value="#{pessoaBean.pessoa.idade}" 
+								pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo" mask="true" />
+						</div>
+						<div class="field">
+							<p:outputLabel for="sexo">Sexo</p:outputLabel><br/>
+							<p:selectOneMenu id="sexo" value="#{pessoaBean.pessoa.sexo}" style="width:125px">
+					            <f:selectItem itemLabel="Selecione..." itemValue="" />
+					            <f:selectItem itemLabel="Masculino" itemValue="M" />
+					            <f:selectItem itemLabel="Feminino" itemValue="F" />
+				        	</p:selectOneMenu>
+						</div>
+					</p:outputPanel>
+					<div class="card">
+<!-- 					    <h:form id="formEndereco"> -->
+					        				
+					        <p:dataTable id="tabEndereco" widgetVar="tabEndereco" var="endereco" value="#{pessoaBean.pessoa.enderecos}"
+					                     editable="true" emptyMessage="Nenhum endereço localizado">
+					            <f:facet name="header">
+					                Endereços
+					            </f:facet>
+					
+					            <p:ajax event="rowEdit" listener="#{pessoaBean.editarLinhaEndereco}" />
+					            		
+					            <p:column headerText="Logradouro">
+					                <p:cellEditor>
+					                    <f:facet name="output"><h:outputText value="#{endereco.logradouro}"/></f:facet>
+					                    <f:facet name="input">
+					                    	<p:inputText id="modelInput" value="#{endereco.logradouro}"
+					                                    style="width:100%">
+					                        	<f:validateLength minimum="1" maximum="100" />
+					                        	<f:ajax event="blur" render="messages" />
+					                        </p:inputText>
+					                    </f:facet>
+					                </p:cellEditor>
+					            </p:column>
+					            
+								<p:column headerText="Numero">
+					                <p:cellEditor>
+					                    <f:facet name="output"><h:outputText value="#{endereco.numero}"/></f:facet>
+					                    <f:facet name="input">
+					                    	<p:inputNumber value="#{endereco.numero}" style="width:100%" label="Numero" decimalPlaces="0" />
+					                    </f:facet>
+					                </p:cellEditor>
+					            </p:column>
+					            
+					            <p:column headerText="Cidade">
+					                <p:cellEditor>
+					                    <f:facet name="output"><h:outputText value="#{endereco.cidade}"/></f:facet>
+					                    <f:facet name="input"><p:inputText value="#{endereco.cidade}" style="width:100%" maxLength="100"
+					                                                       label="Cidade"/></f:facet>
+					                </p:cellEditor>
+					            </p:column>
+					
+								<p:column headerText="Estado">
+					                <p:cellEditor>
+					                    <f:facet name="output"><h:outputText value="#{endereco.estado}"/></f:facet>
+					                    <f:facet name="input"><p:inputText value="#{endereco.estado}" style="width:100%" maxLength="2"
+					                                                       label="Estado"/></f:facet>
+					                </p:cellEditor>
+					            </p:column>
+					            
+					
+					            <p:column headerText="Cep">
+					                <p:cellEditor>
+					                    <f:facet name="output"><h:outputText  value="#{endereco.cep}" mask="99.999-999" /></f:facet>
+					                    <f:facet name="input"><p:inputMask  value="#{endereco.cep}" style="width:100%" mask="99.999-999"
+					                                                       label="Cep"/></f:facet>
+					                </p:cellEditor>
+					            </p:column>
+					
+					
+					            <p:column style="width:6rem">
+					                <p:rowEditor editTitle="Editar Linha"/>
+					            </p:column>
+					            
+					            <p:column style="width:6rem">
+					                <p:cellEditor>
+					                    <f:facet name="output">
+					                    	<p:commandButton class="ui-button-warning rounded-button" process="@this" icon="fa fa-remove" 
+							                                 action="#{pessoaBean.excluirEndereco(endereco)}" update="tabEndereco" />
+					                    </f:facet>
+					                    <f:facet name="input">
+					                    	<p:commandButton class="ui-button-warning rounded-button" process="@this" icon="fa fa-remove" disabled="true"
+							                                 action="#{pessoaBean.excluirEndereco}" oncomplete="PF('tabEndereco').addRow();"/>
+					                    </f:facet>
+					                </p:cellEditor>
+					            </p:column>
+					            
+					        </p:dataTable>
+							<p:toolbar>
+								<f:facet name="left" >
+					                <p:commandButton value="Novo Endereço" process="@this" icon="fa fa-plus" 
+					                                 action="#{pessoaBean.adicionarEndereco}" oncomplete="PF('tabEndereco').addRow();"/>
+					        	</f:facet>
+					        </p:toolbar>
+<!-- 					    </h:form> -->
+					</div>
+					
+<!-- 					<f:facet name="footer" > -->
+					<p:toolbar>
+						<f:facet name="left" >
+							<p:commandButton value="Salvar" icon="fa fa-save"
+								actionListener="#{pessoaBean.salvarPessoa}"
+								oncomplete="PF('PessoaDialog').hide()"
+								update=":formTabelaPessoas:tabelaPessoas"
+								process="pessoa-content @this" />
+							<p:commandButton value="Cancellar" icon="fa fa-undo"
+								onclick="PF('PessoaDialog').hide()"
+								class="ui-button-secondary" type="button" />
+ 						</f:facet> 
+					</p:toolbar>
+				</p:outputPanel>
+				
+								
+			</p:dialog>
+			
+		</h:form>
+
+
+	</ui:define>
+</ui:composition>
 
 </html>

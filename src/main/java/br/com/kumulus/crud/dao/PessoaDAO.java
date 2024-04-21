@@ -39,7 +39,11 @@ public class PessoaDAO implements Serializable {
 		return query.getResultList();
 	}
 	
-	public Pessoa salvar(Pessoa pessoa) {
+	public void salvar(Pessoa pessoa) {
+		manager.persist(pessoa);
+	}
+	
+	public Pessoa alterar(Pessoa pessoa) {
 		return manager.merge(pessoa);
 	}
 
